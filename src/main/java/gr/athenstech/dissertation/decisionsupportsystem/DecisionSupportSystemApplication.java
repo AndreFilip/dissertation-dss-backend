@@ -2,8 +2,15 @@ package gr.athenstech.dissertation.decisionsupportsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+import gr.athenstech.dissertation.decisionsupportsystem.properties.FileStorageProperties;
+import gr.athenstech.dissertation.decisionsupportsystem.properties.MailProperties;
 
 @SpringBootApplication
+@EnableConfigurationProperties({
+    FileStorageProperties.class, MailProperties.class
+})
 public class DecisionSupportSystemApplication {
 
 	public static void main(String[] args) {
