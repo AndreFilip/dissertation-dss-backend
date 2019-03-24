@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import gr.athenstech.dissertation.decisionsupportsystem.properties.FileStorageProperties;
-import gr.athenstech.dissertation.decisionsupportsystem.properties.MailProperties;
+import gr.athenstech.dissertation.decisionsupportsystem.configurations.properties.FileStorageProperties;
+import gr.athenstech.dissertation.decisionsupportsystem.configurations.properties.MailProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties({

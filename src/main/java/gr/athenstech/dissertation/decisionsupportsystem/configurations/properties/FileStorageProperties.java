@@ -1,4 +1,4 @@
-package gr.athenstech.dissertation.decisionsupportsystem.properties;
+package gr.athenstech.dissertation.decisionsupportsystem.configurations.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -1,4 +1,4 @@
-package gr.athenstech.dissertation.decisionsupportsystem.exceptions;
+package gr.athenstech.dissertation.decisionsupportsystem.utils.exceptions;
 
 public class FileStorageException extends RuntimeException {
 	

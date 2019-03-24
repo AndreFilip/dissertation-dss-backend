@@ -1,8 +1,8 @@
-package gr.athenstech.dissertation.decisionsupportsystem.services;
+package gr.athenstech.dissertation.decisionsupportsystem.services.servicesImpl;
 
-import gr.athenstech.dissertation.decisionsupportsystem.exceptions.FileStorageException;
-import gr.athenstech.dissertation.decisionsupportsystem.exceptions.MyFileNotFoundException;
-import gr.athenstech.dissertation.decisionsupportsystem.properties.FileStorageProperties;
+import gr.athenstech.dissertation.decisionsupportsystem.utils.exceptions.FileStorageException;
+import gr.athenstech.dissertation.decisionsupportsystem.utils.exceptions.MyFileNotFoundException;
+import gr.athenstech.dissertation.decisionsupportsystem.configurations.properties.FileStorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,13 +17,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
-public class FileStorageService {
+public class FileStorageServiceImpl {
 	
     private final Path fileStorageLocation;   
     
-
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
+    public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUpload())
                 .toAbsolutePath().normalize();
 

@@ -1,4 +1,4 @@
-package gr.athenstech.dissertation.decisionsupportsystem.payload;
+package gr.athenstech.dissertation.decisionsupportsystem.dto;
 
 public class UploadFileResponse {
 	private String fileName;

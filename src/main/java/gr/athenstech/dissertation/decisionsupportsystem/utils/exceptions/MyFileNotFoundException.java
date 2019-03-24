@@ -1,4 +1,4 @@
-package gr.athenstech.dissertation.decisionsupportsystem.exceptions;
+package gr.athenstech.dissertation.decisionsupportsystem.utils.exceptions;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
