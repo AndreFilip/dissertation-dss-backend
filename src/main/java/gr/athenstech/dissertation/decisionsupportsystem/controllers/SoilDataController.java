@@ -1,6 +1,8 @@
 package gr.athenstech.dissertation.decisionsupportsystem.controllers;
 
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gr.athenstech.dissertation.decisionsupportsystem.dto.SoilInformationDTO;
 import gr.athenstech.dissertation.decisionsupportsystem.dto.SoilResultsResponse;
+import gr.athenstech.dissertation.decisionsupportsystem.model.SoilData;
 import gr.athenstech.dissertation.decisionsupportsystem.services.servicesImpl.SoilDataServiceImpl;
+import gr.athenstech.dissertation.decisionsupportsystem.utils.MyConstants;
 
 @CrossOrigin
 @RestController
@@ -37,20 +41,23 @@ public class SoilDataController {
 			 String phResult = soilDataServiceImpl.calculatePhResult(soilInformation.getPh());
 			 String cationResult = soilDataServiceImpl.calculateCationResult(soilInformation.getCation());
 			 String bulkResult = soilDataServiceImpl.calculateBulkResult(soilInformation.getBulk());
-			 logger.info("carbonResult received: " + carbonResult);
-			 logger.info("phResult received: " + phResult);
-			 logger.info("cationResult received: " + cationResult);
-			 logger.info("bulkResult received: " + bulkResult);
+			 List<String> textureClassList = soilDataServiceImpl.calculateTextureClass(soilInformation.getSand(), soilInformation.getSilt() ,soilInformation.getClay());
+			 String typeOfSoil = "No type of soil matched.";
+
+			 if(textureClassList.indexOf(MyConstants.Soil_Texture_Class_Not_Found) == -1) {
+				 SoilData sd = soilDataServiceImpl.findByTextureClass(textureClassList.get(0));
+				 typeOfSoil = sd.getTypeOfSoil();
+			 }
+//			 logger.info("typeOfSoil received: " + typeOfSoil);
 			 
 			 soilResults = new SoilResultsResponse();
 			 soilResults.setCarbonResult(carbonResult);
 			 soilResults.setPhResult(phResult);
 			 soilResults.setCationResult(cationResult);
 			 soilResults.setCalculateBulkResult(bulkResult);
+			 soilResults.setSoilTextureClassList(textureClassList);	 
+			 soilResults.setTypeOfSoil(typeOfSoil);	 
 
-//			 soilResults = soilDataServiceImpl.();
-//			 soilResults.setSoilTextureClass("asd");			 
-			 
 			return new ResponseEntity<SoilResultsResponse>(soilResults, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

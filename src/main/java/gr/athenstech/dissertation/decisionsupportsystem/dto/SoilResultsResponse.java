@@ -1,21 +1,34 @@
 package gr.athenstech.dissertation.decisionsupportsystem.dto;
 
+import java.util.List;
+
 public class SoilResultsResponse {
 	private String carbonResult;
 	private String phResult;
 	private String cationResult;
 	private String calculateBulkResult;
-	private String soilTextureClass;
+	private List<String> soilTextureClassList;
+	private String typeOfSoil;
 	
 	public SoilResultsResponse() {}
-	
+
 	public SoilResultsResponse(String carbonResult, String phResult, String cationResult, String calculateBulkResult,
-			String soilTextureClass) {
+			List<String> soilTextureClassList,String typeOfSoil) {
+		super();
 		this.carbonResult = carbonResult;
 		this.phResult = phResult;
 		this.cationResult = cationResult;
 		this.calculateBulkResult = calculateBulkResult;
-		this.soilTextureClass = soilTextureClass;
+		this.soilTextureClassList = soilTextureClassList;
+		this.typeOfSoil = typeOfSoil;
+	}	
+
+	public String getTypeOfSoil() {
+		return typeOfSoil;
+	}
+
+	public void setTypeOfSoil(String typeOfSoil) {
+		this.typeOfSoil = typeOfSoil;
 	}
 
 	public String getCarbonResult() {
@@ -50,13 +63,15 @@ public class SoilResultsResponse {
 		this.calculateBulkResult = calculateBulkResult;
 	}
 
-	public String getSoilTextureClass() {
-		return soilTextureClass;
+	public List<String> getSoilTextureClassList() {
+		return soilTextureClassList;
 	}
 
-	public void setSoilTextureClass(String soilTextureClass) {
-		this.soilTextureClass = soilTextureClass;
+	public void setSoilTextureClassList(List<String> soilTextureClassList) {
+		this.soilTextureClassList = soilTextureClassList;
 	}
+	
+	
 	
 	
 	

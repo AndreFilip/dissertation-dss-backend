@@ -1,5 +1,8 @@
 package gr.athenstech.dissertation.decisionsupportsystem.services.servicesImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +21,46 @@ public class SoilDataServiceImpl implements SoilDataService {
 
 	@Override
 	@Transactional
-	public SoilData findBySubTypeOfSoil(String subTypeOfSoil) {		
-		return soilDataRepository.findBySubTypeOfSoil(subTypeOfSoil);
+	public SoilData findByTextureClass(String textureClass) {		
+		return soilDataRepository.findByTextureClass(textureClass);
 	}
 	
-//	TODO:calculateSoilTextureClass
+	@Override
+	public List<String> calculateTextureClass(double sand, double silt, double clay) {
+		List<String> results = new ArrayList<>();
+		
+		if(sand >= 86 && (silt >=0 && silt <= 14) && (clay >= 0 && clay <= 10)) {
+			results.add(MyConstants.Soil_Sand);
+		} else if (( sand >= 70 && sand < 86) && (silt >=0 && silt <= 30) && (clay >= 0 && clay <= 15)) {
+			results.add(MyConstants.Soil_Loamy_sand);
+		} else if (( sand >= 50 && sand <= 70) && (silt >=0 && silt <= 50) && (clay >= 0 && clay <= 20)) {
+			results.add(MyConstants.Soil_Sandy_loam);
+		} else if (( sand >= 23 && sand <= 52) && (silt >= 28 && silt <= 50) && (clay >= 7 && clay <= 27)) {
+			results.add(MyConstants.Soil_Loam);
+		} else if (( sand >= 20 && sand < 50) && (silt >= 74 && silt <= 88) && (clay >= 0 && clay <= 27)) {
+			results.add(MyConstants.Soil_Silty_loam);
+		} else if (( sand >= 0 && sand < 20) && (silt >= 88 && silt <= 100) && (clay >= 0 && clay <= 12)) {
+			results.add(MyConstants.Soil_Silt);
+		} else if (( sand >= 20 && sand < 45) && (silt >= 15 && silt <= 52) && (clay >= 27 && clay <= 40)) {
+			results.add(MyConstants.Soil_Clay_loam);
+		} else if (( sand >= 48 && sand <= 80) && (silt >= 0 && silt <= 28) && (clay >= 20 && clay <= 35)) {
+			results.add(MyConstants.Soil_Sand_clay_loam);
+		} else if (( sand >= 0 && sand < 20) && (silt >= 40 && silt <= 73) && (clay >= 27 && clay <= 40)) {
+			results.add(MyConstants.Soil_Silty_clay_loam);
+		} else if (( sand >= 45 && sand < 65) && (silt >= 0 && silt <= 20) && (clay >= 35 && clay <= 55)) {
+			results.add(MyConstants.Soil_Sandy_clay);
+		} else if (( sand >= 0 && sand < 20) && (silt >= 40 && silt <= 60) && (clay >= 40 && clay <= 60)) {
+			results.add(MyConstants.Soil_Silty_clay);
+		} else if (( sand >= 0 && sand < 45) && (silt >= 0 && silt <= 40) && (clay >= 40 && clay <= 100)) {
+			results.add(MyConstants.Soil_Clay);
+		} 
+		
+		if(results.isEmpty()) {
+			results.add(MyConstants.Soil_Texture_Class_Not_Found);
+		}
+		
+		return results;
+	}
 
 	@Override
 	public String calculateBulkResult(double bulk) {
@@ -58,27 +96,28 @@ public class SoilDataServiceImpl implements SoilDataService {
 		String result = null;
 		if(ph > 7.5 || ph < 5.5) {
 			result = MyConstants.PH_Result_bad;
-		} else if (ph >= 6.2 || ph <= 6.8) {
+		} else if (ph >= 6.2 && ph <= 6.8) {
 			result = MyConstants.PH_Result_optimal;
 		} else {
-			result = MyConstants.BPH_Result_good;
+			result = MyConstants.PH_Result_good;
 		}		
 		return result;			
 	}
 	
 	@Override
-	public String calculateCarbonResult(double carbon, double silk, double clay) {
+	public String calculateCarbonResult(double carbon, double silt, double clay) {
 		String result = null;
-		if(carbon >= calculateCarbonThreshold(silk, clay)) {
-			result = MyConstants.SOC_Result_above_threshold;
+		double threshold = calculateCarbonThreshold(silt, clay);
+		if(carbon >= threshold) {
+			result = MyConstants.SOC_Result_above_threshold + " Your threshold is " + Math.floor(threshold * 100) / 100 + ".";
 		} else {
-			result = MyConstants.SOC_Result_below_threshold;
+			result = MyConstants.SOC_Result_below_threshold + " Your threshold is " + Math.floor(threshold * 100) / 100 + ".";
 		}
 		return result;			
 	}
 	
-	private double calculateCarbonThreshold(double silk, double clay) {
-		return 0.87 + 0.32*(silk + clay);		
+	private double calculateCarbonThreshold(double silt, double clay) {
+		return 0.87 + 0.32*(silt + clay);		
 	}
 	
 

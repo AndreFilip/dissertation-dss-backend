@@ -13,6 +13,8 @@ public class MyConstants {
 	public static final String Soil_Sandy_clay = "Sandy clay";
 	public static final String Soil_Silty_clay = "Silty clay";
 	public static final String Soil_Clay = "Clay";
+	public static final String Soil_Texture_Class_Not_Found = "Soil did not match to any texture class.";
+
 	
 	public static final String Bulk_Result_above_1_6 = "Soils with a bulk density higher than 1.6 g/cm³ tend to restrict root growth.";
 	public static final String Bulk_Result_between_1_1_6 = "Soils with bulk density between 1.0 and 1.6 g/cm³ is a good indicator for plant growth and is likely to have plenty of minerals.";
@@ -25,10 +27,10 @@ public class MyConstants {
 
 	public static final String PH_Result_bad = "PH in the range of 7.6 and above or 5.4 and below is not so good for growing crops.";
 	public static final String PH_Result_optimal = "PH in the range of 6.2 and 6.8 is optimal for growing crops.";	
-	public static final String BPH_Result_good = "PH in the range of 5.5 to 7.5 is very good for growing crops";
+	public static final String PH_Result_good = "PH in the range of 5.5 to 7.5 is a good indicator for growing crops.";
 	
-	public static final String SOC_Result_above_threshold = "Above the threshold for your kind of soil. Soil organic C (SOC) accumulation contributes to the long-term resilience and productivity of agricultural soils.";
-	public static final String SOC_Result_below_threshold = "Below the threshold for your kind of soil. Soil organic C (SOC) accumulation contributes to the long-term resilience and productivity of agricultural soils. You need more clay and silt particles in your soil.";
+	public static final String SOC_Result_above_threshold = "Above the lowest threshold for your kind of soil. Soil organic C (SOC) accumulation contributes to the long-term resilience and productivity of agricultural soils.";
+	public static final String SOC_Result_below_threshold = "Below the lowest threshold for your kind of soil. Soil organic C (SOC) accumulation contributes to the long-term resilience and productivity of agricultural soils. You need more clay and silt particles in your soil.";
 
 	
 }

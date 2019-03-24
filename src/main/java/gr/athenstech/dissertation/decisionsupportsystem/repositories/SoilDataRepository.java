@@ -8,5 +8,5 @@ import gr.athenstech.dissertation.decisionsupportsystem.model.SoilData;
 @Repository
 public interface SoilDataRepository extends JpaRepository<SoilData, Integer> {
 	
-	SoilData findBySubTypeOfSoil(String subTypeOfSoil);
+	SoilData findByTextureClass(String textureClass);
 }
