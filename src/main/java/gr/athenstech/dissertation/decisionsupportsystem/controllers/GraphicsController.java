@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -20,6 +22,22 @@ public class GraphicsController {
 
 	@Autowired
     private GraphicsService graphicsServiceImpl;
+	
+	
+	 @GetMapping("/mapExists")
+	 public ResponseEntity<Map<String, Boolean>> mapExists() {
+		 Boolean result = Boolean.valueOf(false);
+		 Map <String,Boolean> response = new HashMap<>();
+		 try {
+			result = graphicsServiceImpl.mapExists();
+			response.put("myresponse", result);
+			return new ResponseEntity<Map<String, Boolean>>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("myerror", result);
+			return new ResponseEntity<Map<String, Boolean>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	 }
 		
 	 @GetMapping
 	 public ResponseEntity<List<Graphic>> getAllGraphics() {
@@ -34,49 +52,60 @@ public class GraphicsController {
 	 } 
 	 
 	 @PostMapping
-	 public ResponseEntity<String> saveGraphics(@RequestBody List<Graphic> graphics) {	
+	 public ResponseEntity<Map<String,String>> saveGraphics(@RequestBody List<Graphic> graphics) {	
 		 logger.info("List<Graphic> graphics received: {}", graphics.toString());
-
+		 Map <String,String> response = new HashMap<>();
 		try {
-//			graphicsServiceImpl.saveGraphics(graphics);
-			return new ResponseEntity<String>("Successfully saved.", HttpStatus.OK);
+			graphicsServiceImpl.saveGraphics(graphics);
+			response.put("myresponse", "Successfully saved graphics.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Error saving graphics.", HttpStatus.INTERNAL_SERVER_ERROR);
+			response.put("myerror", "Error saving graphics.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		 
 	 }
 	 
 	 @DeleteMapping
-	 public ResponseEntity<String> deleteGraphics() {
+	 public ResponseEntity<Map<String,String>> deleteGraphics() {
+		 Map <String,String> response = new HashMap<>();
 		 try {
 			graphicsServiceImpl.deleteGraphics();
-			return new ResponseEntity<String>("Successfully deleted graphics.", HttpStatus.OK);
+			response.put("myresponse", "Successfully deleted graphics.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Error deleting graphics.", HttpStatus.INTERNAL_SERVER_ERROR);
+			response.put("myerror", "Error deleting graphics.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		 
 	 }
 	 
 	 @DeleteMapping("/{id}")
-	 public ResponseEntity<String> deleteGraphic(@PathVariable Long id) {
+	 public ResponseEntity<Map<String,String>> deleteGraphic(@PathVariable Long id) {
+		 Map <String,String> response = new HashMap<>();
 		 try {
 			graphicsServiceImpl.deleteGraphic(id);
-			return new ResponseEntity<String>("Successfully deleted.", HttpStatus.OK);
+			response.put("myresponse", "Successfully deleted 1 graphic.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<String>("Error deleting graphics.", HttpStatus.INTERNAL_SERVER_ERROR);
+			response.put("myerror", "Error deleting 1 graphic.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		 
 	 }
 	 
 	 @PostMapping("/{id}")
-	 public ResponseEntity<String> saveGraphic(@RequestBody Graphic graphic) {		 
+	 public ResponseEntity<Map<String,String>> saveGraphic(@RequestBody Graphic graphic) {		
+		 Map <String,String> response = new HashMap<>();
 		try {
 			graphicsServiceImpl.saveGraphic(graphic);
-			return new ResponseEntity<String>("Successfully saved.", HttpStatus.OK);
+			response.put("myresponse", "Successfully saved 1 graphic.");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Error saving graphic.", HttpStatus.INTERNAL_SERVER_ERROR);
+			response.put("myerror", "Error in saving 1 graphic");
+			return new ResponseEntity<Map<String,String>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		 
 	 }
 

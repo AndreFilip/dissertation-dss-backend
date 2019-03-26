@@ -10,7 +10,7 @@ import javax.persistence.Lob;
 @Entity
 public class SoilData {
 	 @Id
-	 @GeneratedValue(strategy=GenerationType.AUTO)
+	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	 private Integer id;
 	 private String typeOfSoil;
 	 private String textureClass;

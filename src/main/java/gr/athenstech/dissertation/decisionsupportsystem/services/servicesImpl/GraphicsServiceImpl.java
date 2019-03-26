@@ -1,5 +1,6 @@
 package gr.athenstech.dissertation.decisionsupportsystem.services.servicesImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -57,6 +58,13 @@ public class GraphicsServiceImpl implements GraphicsService{
 			 graphicsRepository.deleteById(id);
 		 }		 	 
 	 }
+
+	@Override
+	public Boolean mapExists() {
+		List<Graphic> graphics = new ArrayList<>();		
+		graphics = graphicsRepository.findAll();		
+		return Boolean.valueOf(!graphics.isEmpty());
+	}
 	 
 
 }
