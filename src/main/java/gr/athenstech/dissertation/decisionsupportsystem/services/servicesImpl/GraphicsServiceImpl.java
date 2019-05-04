@@ -2,6 +2,7 @@ package gr.athenstech.dissertation.decisionsupportsystem.services.servicesImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -31,6 +32,13 @@ public class GraphicsServiceImpl implements GraphicsService{
 	 
 	 @Override
 	 @Transactional
+	 public Optional<Graphic> getGraphic(Long id) {
+		 return graphicsRepository.findById(id);
+	 }
+
+	 
+	 @Override
+	 @Transactional
 	 public void saveGraphics(List<Graphic> graphics) {	
 		 for (Graphic graphic: graphics) {
 			 graphicsRepository.save(graphic);
@@ -39,8 +47,8 @@ public class GraphicsServiceImpl implements GraphicsService{
 	 
 	 @Override
 	 @Transactional
-	 public void saveGraphic(Graphic graphic) {	
-			 graphicsRepository.save(graphic);
+	 public Graphic saveGraphic(Graphic graphic) {	
+			return graphicsRepository.save(graphic);
 	 }
 	 
 	 @Override

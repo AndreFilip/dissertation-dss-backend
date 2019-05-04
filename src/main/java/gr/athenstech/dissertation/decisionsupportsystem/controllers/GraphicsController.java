@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -48,6 +49,18 @@ public class GraphicsController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<List<Graphic>>(graphics, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	 } 
+	 
+	 @GetMapping("/{id}")
+	 public ResponseEntity<Optional<Graphic>> getGraphic(@PathVariable Long id) {
+		Optional<Graphic> graphic = null;
+		 try {
+			graphic = graphicsServiceImpl.getGraphic(id);
+			return new ResponseEntity<Optional<Graphic>>(graphic, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Optional<Graphic>>(graphic, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	 } 
 	 
@@ -95,17 +108,18 @@ public class GraphicsController {
 		}		 
 	 }
 	 
-	 @PostMapping("/{id}")
-	 public ResponseEntity<Map<String,String>> saveGraphic(@RequestBody Graphic graphic) {		
-		 Map <String,String> response = new HashMap<>();
+	 @PostMapping("/saveGraphic")
+	 public ResponseEntity<Object> saveGraphic(@RequestBody Graphic graphic) {		
+//		 Map <String,String> response = new HashMap<>();
+//		 logger.debug("Graphic received: " + graphic.toString());
 		try {
-			graphicsServiceImpl.saveGraphic(graphic);
-			response.put("myresponse", "Successfully saved 1 graphic.");
-			return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
+			graphic = graphicsServiceImpl.saveGraphic(graphic);
+//			response.put("myresponse", "Successfully saved 1 graphic.");
+			return new ResponseEntity<Object>(graphic, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.put("myerror", "Error in saving 1 graphic");
-			return new ResponseEntity<Map<String,String>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//			response.put("myerror", "Error in saving 1 graphic");
+			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		 
 	 }
 
