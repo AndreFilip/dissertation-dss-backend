@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gr.athenstech.dissertation.decisionsupportsystem.services.GraphicsService;
+import gr.athenstech.dissertation.decisionsupportsystem.configurations.security.SecurityUtils;
 import gr.athenstech.dissertation.decisionsupportsystem.model.Graphic;
+import gr.athenstech.dissertation.decisionsupportsystem.model.User;
 import gr.athenstech.dissertation.decisionsupportsystem.repositories.GraphicsRepository;
 
 @Service
@@ -24,10 +26,15 @@ public class GraphicsServiceImpl implements GraphicsService{
 	 @Autowired
 	 private GraphicsRepository graphicsRepository; 
 	
+	 @Autowired
+	 private SecurityUtils securityUtils; 
+	 
 	 @Override
 	 @Transactional
 	 public List<Graphic> getAllGraphics() {
-		 return graphicsRepository.findAll();
+		 User user = securityUtils.getCurrentUser();
+		 logger.info("User, getAllGraphics(): {}", user.toString());
+		 return graphicsRepository.findByUser(user);
 	 } 
 	 
 	 @Override
@@ -40,7 +47,10 @@ public class GraphicsServiceImpl implements GraphicsService{
 	 @Override
 	 @Transactional
 	 public void saveGraphics(List<Graphic> graphics) {	
+		 User user = securityUtils.getCurrentUser();		 
+		 logger.info("User, saveGraphics(): {}", user.toString());
 		 for (Graphic graphic: graphics) {
+			 graphic.setUser(user);
 			 graphicsRepository.save(graphic);
 		 }			 
 	 }
@@ -48,13 +58,18 @@ public class GraphicsServiceImpl implements GraphicsService{
 	 @Override
 	 @Transactional
 	 public Graphic saveGraphic(Graphic graphic) {	
-			return graphicsRepository.save(graphic);
+		 User user = securityUtils.getCurrentUser();		 
+		 logger.info("User, saveGraphic(): {}", user.toString());
+		 graphic.setUser(user);		 
+	     return graphicsRepository.save(graphic);
 	 }
 	 
 	 @Override
 	 @Transactional
 	 public void deleteGraphics() {
-		 for (Graphic graphic: graphicsRepository.findAll()) {
+		 User user = securityUtils.getCurrentUser();		 
+		 logger.info("User, deleteGraphics(): {}", user.toString());
+		 for (Graphic graphic: graphicsRepository.findByUser(user)) {
 			 graphicsRepository.delete(graphic);
 		 }		 
 	 }
@@ -70,7 +85,9 @@ public class GraphicsServiceImpl implements GraphicsService{
 	@Override
 	public Boolean mapExists() {
 		List<Graphic> graphics = new ArrayList<>();		
-		graphics = graphicsRepository.findAll();		
+		User user = securityUtils.getCurrentUser();		 
+		logger.info("User, mapExists(): {}", user.toString());
+		graphics = graphicsRepository.findByUser(user);		
 		return Boolean.valueOf(!graphics.isEmpty());
 	}
 	 

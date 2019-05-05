@@ -10,6 +10,6 @@ import gr.athenstech.dissertation.decisionsupportsystem.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findByUsername(String username);
+	Optional<User> findOptionalByUsername(String username);
     Boolean existsByUsername(String username);
 }

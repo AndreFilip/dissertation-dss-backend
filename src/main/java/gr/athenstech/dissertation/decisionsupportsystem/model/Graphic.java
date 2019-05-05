@@ -1,6 +1,7 @@
 package gr.athenstech.dissertation.decisionsupportsystem.model;
 
 import gr.athenstech.dissertation.decisionsupportsystem.model.Color;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -34,6 +36,9 @@ public class Graphic {
 	 @OneToOne(cascade = CascadeType.ALL)
 	 @JoinColumn(nullable = false)
 	 private Color color;
+	 @ManyToOne
+	 @JoinColumn(name="user_id", nullable = true)
+	 private User user;
 	 
 	 public Graphic() {}
 	 
@@ -111,6 +116,14 @@ public class Graphic {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
