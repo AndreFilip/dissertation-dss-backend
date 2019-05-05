@@ -2,6 +2,7 @@ package gr.athenstech.dissertation.decisionsupportsystem.model;
 
 import gr.athenstech.dissertation.decisionsupportsystem.model.Color;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,8 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 
 @Entity
+@Table(name="graphics")
 public class Graphic {
 	
 	 @Id
@@ -19,13 +23,16 @@ public class Graphic {
 	 private Long id;	 
 	 private String title;
 	 private String comments;
+	 @Column(nullable = true)
 	 private double latitude;
+	 @Column(nullable = true)
 	 private double longitude;
 	 @Lob
+	 @Column(nullable = true)
 	 private String paths;
 	 private String type;
 	 @OneToOne(cascade = CascadeType.ALL)
-	 @JoinColumn(name = "color_id")
+	 @JoinColumn(nullable = false)
 	 private Color color;
 	 
 	 public Graphic() {}

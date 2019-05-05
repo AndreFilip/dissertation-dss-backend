@@ -101,7 +101,6 @@ public class GraphicsController {
 			response.put("myresponse", "Successfully deleted 1 graphic.");
 			return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.put("myerror", "Error deleting 1 graphic.");
 			return new ResponseEntity<Map<String,String>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,15 +109,11 @@ public class GraphicsController {
 	 
 	 @PostMapping("/saveGraphic")
 	 public ResponseEntity<Object> saveGraphic(@RequestBody Graphic graphic) {		
-//		 Map <String,String> response = new HashMap<>();
-//		 logger.debug("Graphic received: " + graphic.toString());
 		try {
 			graphic = graphicsServiceImpl.saveGraphic(graphic);
-//			response.put("myresponse", "Successfully saved 1 graphic.");
 			return new ResponseEntity<Object>(graphic, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-//			response.put("myerror", "Error in saving 1 graphic");
 			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		 
 	 }

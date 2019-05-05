@@ -48,7 +48,6 @@ public class SoilDataController {
 				 SoilData sd = soilDataServiceImpl.findByTextureClass(textureClassList.get(0));
 				 typeOfSoil = sd.getTypeOfSoil();
 			 }
-//			 logger.info("typeOfSoil received: " + typeOfSoil);
 			 
 			 soilResults = new SoilResultsResponse();
 			 soilResults.setCarbonResult(carbonResult);
