@@ -3,6 +3,11 @@ package gr.athenstech.dissertation.decisionsupportsystem.services.servicesImpl;
 import gr.athenstech.dissertation.decisionsupportsystem.utils.exceptions.FileStorageException;
 import gr.athenstech.dissertation.decisionsupportsystem.utils.exceptions.MyFileNotFoundException;
 import gr.athenstech.dissertation.decisionsupportsystem.configurations.properties.FileStorageProperties;
+import gr.athenstech.dissertation.decisionsupportsystem.configurations.security.SecurityUtils;
+import gr.athenstech.dissertation.decisionsupportsystem.model.User;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,14 +23,18 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileStorageServiceImpl {
-	
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageServiceImpl.class);
+
     private final Path fileStorageLocation;   
+    
+    @Autowired
+    private SecurityUtils securityUtils;
     
     @Autowired
     public FileStorageServiceImpl(FileStorageProperties fileStorageProperties) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUpload())
                 .toAbsolutePath().normalize();
-
+        
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
@@ -42,10 +51,34 @@ public class FileStorageServiceImpl {
             if(fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
-
+            if(!fileName.endsWith("kml")) {
+                throw new FileStorageException("Sorry! Filename does not end with .kml " + fileName);
+            }
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            String username = securityUtils.getCurrentUser().getUsername();
+            Path usersDirectoryPath = Paths.get(this.fileStorageLocation.toString(), username)
+                    .toAbsolutePath().normalize();
+            if (Files.notExists(usersDirectoryPath)) {
+            	try {
+                    Files.createDirectories(usersDirectoryPath);
+                } catch (Exception ex) {
+                	logger.info("Could not create the user's directory where the uploaded files will be stored: {}", username);
+                    throw new FileStorageException("Could not create the directory where the uploaded files will be stored. ", ex);
+                }
+            }
+            Files.list(usersDirectoryPath).forEach(p -> {
+				try {
+					Files.delete(p);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+                	logger.info("Could not delete: {}", p.toString());
+				}
+			});
+            
+            Path usersFilenamePath = Paths.get(this.fileStorageLocation.toString(),username).toAbsolutePath().normalize().resolve(fileName); 
+            logger.info("targetLocation, {} " , usersFilenamePath.toString() );
+            Files.copy(file.getInputStream(), usersFilenamePath, StandardCopyOption.REPLACE_EXISTING);
 
             return fileName;
         } catch (IOException ex) {
@@ -53,17 +86,40 @@ public class FileStorageServiceImpl {
         }
     }
     
-    public Resource loadFileAsResource(String fileName) {
-        try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+    public void deleteFile () throws IOException {
+    	String username = securityUtils.getCurrentUser().getUsername();
+        Path usersDirectoryPath = Paths.get(this.fileStorageLocation.toString(), username)
+                .toAbsolutePath().normalize();
+        if (Files.exists(usersDirectoryPath)) {
+	        	Files.list(usersDirectoryPath).forEach(p -> {
+	    			try {
+	    				Files.delete(p);
+	    			} catch (IOException e) {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	                	logger.info("Could not delete: {}", p.toString());
+	    			}
+	    		});        	
+        }
+        
+    }
+    
+    public Resource loadFileAsResource(String fileName, String username) {
+        logger.info("loadFileAsResource fileName, {} " , fileName);
+
+    	Path usersPath = null;
+        try {        	
+            usersPath = Paths.get(this.fileStorageLocation.toString(), username).toAbsolutePath().normalize().resolve(fileName); 
+            Resource resource = new UrlResource(usersPath.toUri());
             if(resource.exists()) {
                 return resource;
             } else {
+                logger.info("!resource.exists(), {} " , usersPath.toString());
                 throw new MyFileNotFoundException("File not found " + fileName);
             }
         } catch (MalformedURLException ex) {
-            throw new MyFileNotFoundException("File not found " + fileName, ex);
+            logger.info("malformed, {} " , usersPath.toString());
+            throw new MyFileNotFoundException("File was malformed and not found " + fileName, ex);
         }
     }
 
