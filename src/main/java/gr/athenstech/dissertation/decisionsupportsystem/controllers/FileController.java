@@ -84,14 +84,14 @@ public class FileController {
    public ResponseEntity<Resource> downloadFile( @PathVariable String username, @PathVariable String fileName, HttpServletRequest request) {
        logger.info("downloadFile fileName, {} " , fileName);
 
-       String usernameNow = securityUtils.getCurrentUser().getUsername();
-       if(!usernameNow.equals(username)) {
-		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-       }
+//       String usernameNow = securityUtils.getCurrentUser().getUsername();
+//       if(!usernameNow.equals(username)) {
+//		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//       }
        // Load file as Resource
        Resource resource;
 		try {
-			resource = fileStorageServiceImpl.loadFileAsResource(fileName, usernameNow);
+			resource = fileStorageServiceImpl.loadFileAsResource(fileName, username);
 		} catch (MyFileNotFoundException e) {
 			e.printStackTrace();
 		    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
