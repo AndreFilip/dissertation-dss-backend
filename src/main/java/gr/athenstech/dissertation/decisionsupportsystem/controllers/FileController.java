@@ -32,6 +32,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 
 @CrossOrigin
 @RestController
@@ -118,16 +119,23 @@ public class FileController {
    
    @GetMapping("/downloadFile/getIfExists")
    public ResponseEntity<String> getFile (HttpServletRequest request) {
-       String resource;
+       String filename;
 		try {
-			resource = fileStorageServiceImpl.getFile();
+			filename = fileStorageServiceImpl.getFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		if(resource != null) {		      
-			return new ResponseEntity<>( resource ,HttpStatus.OK);
+		if(!StringUtils.isEmpty(filename)) {	
+			String username = securityUtils.getCurrentUser().getUsername();
+		    String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+		               .path("/files/downloadFile/")               
+		               .path(username)
+		               .path("/")
+		               .path(filename)
+		               .toUriString();
+			return new ResponseEntity<>( fileDownloadUri ,HttpStatus.OK);
 
 		}
 		
