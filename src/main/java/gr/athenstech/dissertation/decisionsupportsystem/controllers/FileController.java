@@ -118,8 +118,7 @@ public class FileController {
    
    @GetMapping("/downloadFile/getIfExists")
    public ResponseEntity<String> getFile (HttpServletRequest request) {
-       // Load file as Resource
-       Resource resource;
+       String resource;
 		try {
 			resource = fileStorageServiceImpl.getFile();
 		} catch (IOException e) {
@@ -127,20 +126,8 @@ public class FileController {
 		    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		if(resource != null) {
-			// Try to determine file's content type
-		       String contentType = null;
-		       try {
-		           contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-		       } catch (IOException ex) {
-		           logger.info("Could not determine file type.");
-		       }
-
-		       // Fallback to the default content type if type could not be determined
-		       if(contentType == null) {
-		           contentType = "application/octet-stream";
-		       }
-	       return ResponseEntity.ok().body(resource.toString());
+		if(resource != null) {		      
+			return new ResponseEntity<>( resource ,HttpStatus.OK);
 
 		}
 		
