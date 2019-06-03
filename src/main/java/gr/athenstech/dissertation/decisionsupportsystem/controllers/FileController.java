@@ -117,7 +117,7 @@ public class FileController {
    }
    
    @GetMapping("/downloadFile/getIfExists")
-   public ResponseEntity<Resource> getFile (HttpServletRequest request) {
+   public ResponseEntity<String> getFile (HttpServletRequest request) {
        // Load file as Resource
        Resource resource;
 		try {
@@ -140,10 +140,7 @@ public class FileController {
 		       if(contentType == null) {
 		           contentType = "application/octet-stream";
 		       }
-	       return ResponseEntity.ok()
-	               .contentType(MediaType.parseMediaType(contentType))
-	               .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-	               .body(resource);
+	       return ResponseEntity.ok().body(resource.toString());
 
 		}
 		
