@@ -115,5 +115,41 @@ public class FileController {
                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                .body(resource);
    }
+   
+   @GetMapping("/downloadFile/{username}")
+   public ResponseEntity<Resource> getFile (HttpServletRequest request) {
+       // Load file as Resource
+       Resource resource;
+		try {
+			resource = fileStorageServiceImpl.getFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		if(resource != null) {
+			// Try to determine file's content type
+		       String contentType = null;
+		       try {
+		           contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+		       } catch (IOException ex) {
+		           logger.info("Could not determine file type.");
+		       }
+
+		       // Fallback to the default content type if type could not be determined
+		       if(contentType == null) {
+		           contentType = "application/octet-stream";
+		       }
+	       return ResponseEntity.ok()
+	               .contentType(MediaType.parseMediaType(contentType))
+	               .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+	               .body(resource);
+
+		}
+		
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       
+       
+   }
 
 }

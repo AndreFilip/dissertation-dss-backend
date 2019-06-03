@@ -20,6 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileStorageServiceImpl {
@@ -101,6 +103,27 @@ public class FileStorageServiceImpl {
 	    			}
 	    		});        	
         }
+        
+    }
+    
+    public Resource getFile () throws IOException {
+    	String username = securityUtils.getCurrentUser().getUsername();
+        Path usersDirectoryPath = Paths.get(this.fileStorageLocation.toString(), username)
+                .toAbsolutePath().normalize();
+        if (Files.exists(usersDirectoryPath)) {
+	        	List<Path> filepaths = Files.list(usersDirectoryPath).collect(Collectors.toList());
+	        	if (filepaths != null && filepaths.get(0) != null) {
+	        		 Resource resource = new UrlResource(filepaths.get(0).toUri());
+	        		 if(resource.exists()) {
+		                 return resource;
+		             } else {
+		                 logger.info("getFile(),!resource.exists() {} " , resource.toString());
+		                 throw new MyFileNotFoundException("File not found " + resource.toString());
+		             }
+	        	}           
+	        	 
+        }
+        return null;
         
     }
     
