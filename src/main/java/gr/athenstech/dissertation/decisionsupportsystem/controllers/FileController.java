@@ -116,7 +116,7 @@ public class FileController {
                .body(resource);
    }
    
-   @GetMapping("/downloadFile/{username}")
+   @GetMapping("/downloadFile/getIfExists")
    public ResponseEntity<Resource> getFile (HttpServletRequest request) {
        // Load file as Resource
        Resource resource;
