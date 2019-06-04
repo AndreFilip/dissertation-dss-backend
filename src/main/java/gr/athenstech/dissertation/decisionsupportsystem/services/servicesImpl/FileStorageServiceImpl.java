@@ -113,7 +113,7 @@ public class FileStorageServiceImpl {
         if (Files.exists(usersDirectoryPath)) {
 	        	List<Path> filepaths = Files.list(usersDirectoryPath).collect(Collectors.toList());	        	
 	        	if (filepaths != null && filepaths.get(0) != null) {	        		
-		             return filepaths.get(0).toString();		           
+		             return filepaths.get(0).getFileName().toString();		           
 	        	}          
 	        	 
         }
