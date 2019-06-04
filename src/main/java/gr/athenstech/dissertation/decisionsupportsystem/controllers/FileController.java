@@ -118,7 +118,8 @@ public class FileController {
    }
    
    @GetMapping("/downloadFile/getIfExists")
-   public ResponseEntity<String> getFile (HttpServletRequest request) {
+   public ResponseEntity<?> getFile (HttpServletRequest request) {
+	   Map<String, String> map;
        String filename;
 		try {
 			filename = fileStorageServiceImpl.getFile();
@@ -135,7 +136,9 @@ public class FileController {
 		               .path("/")
 		               .path(filename)
 		               .toUriString();
-			return new ResponseEntity<>( fileDownloadUri ,HttpStatus.OK);
+		    map = new HashMap<>();
+		    map.put("result", fileDownloadUri);
+			return new ResponseEntity<>( map ,HttpStatus.OK);
 
 		}
 		
