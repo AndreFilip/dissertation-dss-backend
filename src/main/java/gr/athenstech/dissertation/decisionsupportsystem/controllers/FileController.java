@@ -138,6 +138,7 @@ public class FileController {
 		               .toUriString();
 		    map = new HashMap<>();
 		    map.put("result", fileDownloadUri);
+		    map.put("filename", filename);
 			return new ResponseEntity<>( map ,HttpStatus.OK);
 
 		}
